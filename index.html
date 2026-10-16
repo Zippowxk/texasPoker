@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1412">
+  <meta name="description" content="离线单机德州扑克：与三位电脑对手在浏览器中对弈。">
+  <title>河牌俱乐部 · 单机德州扑克</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">♠</div>
+        <div><div class="brand-title">河牌俱乐部</div><div class="brand-subtitle">THE RIVER CLUB</div></div>
+      </div>
+      <div class="topbar-center"><span class="live-dot"></span><span>本地单机对局</span><span class="topbar-divider">/</span><span>无限注德州扑克</span></div>
+      <div class="topbar-actions"><button id="rulesButton" class="text-button" type="button">玩法说明 <span>↗</span></button><button id="restartButton" class="icon-button" type="button" title="重新开始" aria-label="重新开始">↻</button></div>
+    </header>
+
+    <main class="layout">
+      <section class="game-column" aria-label="德州扑克牌桌">
+        <div class="game-heading"><div><div class="eyebrow">PRIVATE TABLE · 01</div><h1>今晚，牌桌见。</h1></div><div class="hand-indicator"><span>当前牌局</span><strong id="handNumber">#01</strong></div></div>
+        <div class="table-frame">
+          <div class="table-rim"><div class="table-felt">
+            <div class="felt-decoration felt-decoration-one"></div><div class="felt-decoration felt-decoration-two"></div>
+            <div id="seat2" class="player-seat seat-top"></div>
+            <div id="seat1" class="player-seat seat-left"></div>
+            <div id="seat3" class="player-seat seat-right"></div>
+            <div class="table-center">
+              <div class="pot-label">TOTAL POT</div><div class="pot-amount"><span class="chip-mini"></span><strong id="potAmount">0</strong></div>
+              <div id="communityCards" class="community-cards" aria-label="公共牌"></div>
+              <div class="stage-label"><span class="stage-line"></span><span id="phaseLabel">等待发牌</span><span class="stage-line"></span></div>
+            </div>
+            <div id="seat0" class="player-seat seat-bottom"></div>
+          </div></div>
+        </div>
+        <div class="table-footer"><span>♠ <span id="blindLabel">盲注 10 / 20</span></span><span id="turnStatus">正在发牌…</span><span>♥ CLUB 01</span></div>
+
+        <section class="action-panel" aria-label="玩家操作">
+          <div class="action-topline"><div><span class="section-kicker">YOUR MOVE</span><h2 id="actionTitle">等待你的回合</h2></div><div class="your-stack"><span>你的筹码</span><strong id="heroStack">2,000</strong></div></div>
+          <div id="actionControls" class="action-controls">
+            <div class="raise-box"><div class="raise-head"><span>加注至</span><strong id="raiseAmount">—</strong></div><input id="raiseSlider" type="range" min="0" max="100" value="0" aria-label="加注金额"><div class="raise-presets"><button type="button" data-preset="half">½ 底池</button><button type="button" data-preset="pot">1 倍底池</button><button type="button" data-preset="max">最大</button></div></div>
+            <div class="action-buttons"><button id="foldButton" class="action-button fold" type="button">弃牌 <span>F</span></button><button id="callButton" class="action-button call" type="button">过牌 <span>SPACE</span></button><button id="raiseButton" class="action-button raise" type="button">加注 <span>↗</span></button><button id="allinButton" class="action-button allin" type="button">全下</button></div>
+          </div>
+          <div id="nextHandControls" class="next-hand-controls" hidden><div id="resultText" class="result-text"></div><div class="between-hand-buttons"><button id="revealButton" class="review-button" type="button" aria-controls="reviewPanel" aria-expanded="false">查看所有人底牌</button><button id="nextHandButton" class="next-hand-button" type="button">开始下一手 <span>→</span></button></div></div>
+          <div id="reviewPanel" class="review-panel" hidden aria-live="polite"></div>
+        </section>
+      </section>
+
+      <aside class="sidebar">
+        <div class="side-card scoreboard"><div class="side-heading"><span class="section-kicker">THE TABLE</span><span class="side-icon">♣</span></div><h2>牌桌战况</h2><div id="scoreboard" class="score-list"></div></div>
+        <div class="side-card history"><div class="side-heading"><span class="section-kicker">HAND HISTORY</span><span class="history-dot"></span></div><h2>对局记录</h2><div id="historyList" class="history-list"></div></div>
+        <div class="side-tip"><span>✦</span><p>牌桌上的好决定，往往是知道什么时候收手。</p></div>
+      </aside>
+    </main>
+  </div>
+
+  <dialog id="rulesDialog" class="modal"><form method="dialog"><button class="modal-close" aria-label="关闭" type="submit">×</button><span class="section-kicker">HOW TO PLAY</span><h2>德州扑克玩法</h2><p>每位玩家获得两张底牌。翻牌、转牌和河牌依次组成五张公共牌；从七张牌中选出最好的五张牌。</p><div class="rules-grid"><div><strong>下注顺序</strong><span>底牌 → 翻牌 → 转牌 → 河牌 → 摊牌</span></div><div><strong>你的选择</strong><span>弃牌、过牌或跟注、加注、全下</span></div><div><strong>胜负判定</strong><span>未弃牌者比牌；若所有对手弃牌，你直接赢得底池。</span></div><div><strong>牌型大小</strong><span>同花顺 ＞ 四条 ＞ 葫芦 ＞ 同花 ＞ 顺子 ＞ 三条 ＞ 两对 ＞ 一对 ＞ 高牌</span></div></div><p class="rules-note">单机对局会在浏览器本地运行。每人起始 2,000 筹码，盲注为 10 / 20。</p><button class="modal-primary" type="submit">回到牌桌</button></form></dialog>
+  <dialog id="restartDialog" class="modal confirm-modal"><form method="dialog"><button class="modal-close" aria-label="关闭" type="submit">×</button><span class="section-kicker">NEW SESSION</span><h2>重新开始对局？</h2><p>所有玩家的筹码会重置为 2,000，当前牌局将结束。</p><div class="confirm-buttons"><button class="modal-secondary" type="submit">继续当前对局</button><button id="confirmRestart" class="modal-primary" type="button">重新开始</button></div></form></dialog>
+  <script src="game.js"></script><script src="ai.js"></script><script src="app.js"></script>
+</body>
+</html>
